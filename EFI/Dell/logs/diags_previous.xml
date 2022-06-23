@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <SupportAssistPrebootDiagnosticLog>
     <Schema>1.0.0</Schema>
-    <LogNumber>623</LogNumber>
-    <LogTimeStamp>04/11/2022 20:30:23</LogTimeStamp>
+    <LogNumber>628</LogNumber>
+    <LogTimeStamp>04/14/2022 15:26:13</LogTimeStamp>
     <ePSA_Data>
       <Result>Not Reported</Result>
       <ReturnCode>BOOT_HOST_OS</ReturnCode>
       <ePSAFullVersion>4306.17</ePSAFullVersion>
-      <ePSAInvocationCount>21</ePSAInvocationCount>
+      <ePSAInvocationCount>26</ePSAInvocationCount>
     </ePSA_Data>
     <BIOS_Data>
       <ErrorCategory>POWER_SUPPLY</ErrorCategory>
