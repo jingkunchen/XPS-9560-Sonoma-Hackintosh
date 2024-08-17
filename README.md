@@ -1,56 +1,83 @@
-# Dell XPS 9560 4K Hackintosh EFI Configuration Guide
+# XPS 9560 macOS Sonoma 14.6.1 EFI (OpenCore 1.0.1)
 
-This repository contains EFI files tailored for your Dell XPS 9560 with the 4K screen version, customized for a Hackintosh setup. Follow the steps below to set up macOS on your computer.
+This repository contains the EFI files for running macOS Sonoma 14.6.1 on the Dell XPS 9560 (i7-7700HQ / 4K UHD / GTX 1050 / Intel HD 630) using OpenCore 1.0.1.
 
-## Hardware Configuration
+## Specifications
 
-- **CPU**: Intel Core i7-7700HQ
-- **Memory**: 32GB RAM
-- **Storage**: 1TB Samsung 970 NVMe SSD
-- **Wi-Fi/Bluetooth**: Broadcom BCM1820A (Pin Mapped)
+- **Model:** Dell XPS 9560
+- **CPU:** Intel Core i7-7700HQ
+- **GPU:** Intel HD 630 & Nvidia GTX 1050 (disabled in macOS)
+- **RAM:** 16GB DDR4
+- **Storage:** NVMe SSD
+- **Display:** 15.6" 4K UHD (3840x2160)
+- **Audio:** Realtek ALC298
+- **Wi-Fi:** Intel AX200 (with support using AirportItlwm)
+- **Bootloader:** OpenCore 1.0.1
+- **macOS Version:** Sonoma 14.6.1
 
-## Display
+## What's Working
 
-- **Screen**: 4K Ultra HD (3840 x 2160) InfinityEdge display
+- [x] Intel HD 630 Graphics (with hardware acceleration)
+- [x] Audio (internal speakers, microphone, headphone jack)
+- [x] Wi-Fi & Bluetooth (with Intel AX200 using AirportItlwm)
+- [x] Keyboard & Trackpad (with gestures)
+- [x] Battery Management
+- [x] Sleep/Wake
+- [x] USB Ports (including Type-C)
+- [x] HDMI output
+- [x] Brightness Control
+- [x] Webcam
 
-## OpenCore Version
+## Not Working / Issues
 
-- Using OpenCore version: 0.95
+- [ ] Nvidia GTX 1050 (not supported in macOS)
+- [ ] SD Card Reader (unsupported)
+- [ ] Thunderbolt 3 hot-plug (works when connected at boot)
+- [ ] Occasionally slow boot times (related to certain ACPI patches)
+- [ ] AirDrop, Handoff, and Sidecar (Intel Wi-Fi lacks native macOS support for these features)
 
-## Configuration Steps
+## BIOS Settings
 
-Follow these steps to configure the EFI:
+To get the best compatibility, ensure your BIOS settings are configured as follows:
 
-1. **Download EFI Files**:
-   - Click the "Clone or download" button at the top of this page and select "Download ZIP" to download the repository as a ZIP file.
-   - Unzip the ZIP file to obtain a folder named "EFI."
+- **SATA Operation:** AHCI
+- **Secure Boot:** Disabled
+- **Enable Legacy Option ROMs:** Disabled
+- **Boot Mode:** UEFI
+- **Intel SpeedStep:** Enabled
+- **VT-d:** Disabled
+- **CFG Lock:** Disabled (if available)
+- **Thunderbolt Boot Support:** Enabled
 
-2. **Replace Original EFI**:
-   - On your Dell XPS 9560, locate and back up your original EFI folder (typically found on the EFI partition of your system drive).
-   - Replace the original EFI folder with the downloaded "EFI" folder.
+## Installation
 
-3. **Configure config.plist**:
-   - Open the new "EFI/OC/config.plist" file for customization.
-   - Ensure your config.plist contains the correct settings for your hardware, including SMBIOS, device properties, and more.
+1. **Prepare macOS USB Installer**: Create a macOS Sonoma 14.6.1 installer using [macOS Recovery](https://support.apple.com/en-us/HT201372) or from a working macOS environment.
 
-4. **Restart Your Computer**:
-   - Save all changes and restart your computer.
-   - Choose to boot into the new EFI configuration.
+2. **Copy EFI Folder**: After creating the USB installer, replace the EFI folder on the USB drive with the one from this repository.
 
-5. **Install macOS**:
-   - Use your macOS installation media (USB installer, etc.) to boot your computer.
-   - Install macOS onto your hard drive.
+3. **BIOS Setup**: Make sure your BIOS is configured as described in the "BIOS Settings" section.
 
-6. **Fix Drivers and Kernel Extensions**:
-   - Use Hackintool or other tools to fix your drivers and kernel extensions to ensure all hardware works correctly.
+4. **Install macOS**: Boot from the USB installer and follow the standard macOS installation steps.
 
-7. **Complete Configuration**:
-   - After completing the macOS installation, proceed to configure any additional settings as needed, such as Wi-Fi, Bluetooth, sound, and more.
+5. **Post-Installation**:
+    - Copy the EFI folder from the USB to your system's EFI partition after installing macOS.
+    - Generate your own SMBIOS using [GenSMBIOS](https://github.com/corpnewt/GenSMBIOS) and replace the `SerialNumber`, `BoardSerialNumber`, and `SmUUID` in `config.plist`.
 
-## Notes
+## Setting Up Intel AX200 Wi-Fi and Bluetooth
 
-- Make sure to back up your data before using this EFI configuration in case of any unexpected issues.
-- This configuration is specific to the Dell XPS 9560 with a 4K display and may require adjustments to fit your computer.
-- If you encounter any problems, consult the OpenCore documentation or seek help from the Hackintosh community.
+1. Download the latest release of [AirportItlwm](https://github.com/OpenIntelWireless/itlwm).
+2. Add `AirportItlwm.kext` to your EFI's `OC/Kexts` folder and update your `config.plist` to include the kext.
+3. The native macOS Wi-Fi menu will now work with your Intel AX200, no need for HeliPort.
 
-For more detailed configuration and troubleshooting, refer to the [OpenCore documentation](https://dortania.github.io/OpenCore-Install-Guide/) and the [Hackintosh community](https://www.tonymacx86.com/). Best of luck with your Hackintosh setup!
+## Known Issues & Troubleshooting
+
+- **Slow Boot Times**: If you experience long boot times, try disabling `AppleCpuPmCfgLock` in `config.plist`.
+- **Sleep/Wake Issues**: If the laptop doesn't wake from sleep properly, experiment with different `Darkwake` settings in `config.plist`.
+- **Intel Wi-Fi Configuration**: For Intel AX200, follow the instructions from the [OpenIntelWireless](https://github.com/OpenIntelWireless/itlwm) project to set up Wi-Fi and Bluetooth. Note that advanced features like AirDrop and Handoff are not supported.
+
+## Credits
+
+- [Acidanthera](https://github.com/acidanthera) for OpenCore and kexts
+- [Dortania](https://dortania.github.io/) for their comprehensive guides
+- [OpenIntelWireless](https://github.com/OpenIntelWireless) for Intel Wi-Fi and Bluetooth support
+- [XPS 9560 Hackintosh Community](https://www.tonymacx86.com/) for testing and support
